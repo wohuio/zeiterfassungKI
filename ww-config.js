@@ -1,0 +1,62 @@
+export default {
+  editor: {
+    label: {
+      en: "Zeit-Erfassung / Time Tracker",
+      de: "Zeit-Erfassung"
+    },
+    icon: "clock",
+  },
+  properties: {
+    apiBaseUrl: {
+      label: {
+        en: "API Base URL",
+        de: "API Basis-URL"
+      },
+      type: "Text",
+      defaultValue: "https://xv05-su7k-rvc8.f2.xano.io/api:yiQZgKMy",
+      bindable: true,
+    },
+    primaryColor: {
+      label: {
+        en: "Primary Color",
+        de: "Primärfarbe"
+      },
+      type: "Color",
+      defaultValue: "#3B82F6",
+    },
+    successColor: {
+      label: {
+        en: "Success Color (Start)",
+        de: "Erfolgsfarbe (Start)"
+      },
+      type: "Color",
+      defaultValue: "#10B981",
+    },
+    dangerColor: {
+      label: {
+        en: "Danger Color (Stop)",
+        de: "Gefahrenfarbe (Stop)"
+      },
+      type: "Color",
+      defaultValue: "#EF4444",
+    },
+    itemsPerPage: {
+      label: {
+        en: "Items per Page",
+        de: "Einträge pro Seite"
+      },
+      type: "Number",
+      defaultValue: 10,
+      bindable: true,
+    },
+    autoRefreshInterval: {
+      label: {
+        en: "Auto-refresh Interval (seconds)",
+        de: "Auto-Aktualisierung (Sekunden)"
+      },
+      type: "Number",
+      defaultValue: 1,
+      bindable: true,
+    },
+  },
+};
