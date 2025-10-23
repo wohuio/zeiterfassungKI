@@ -205,6 +205,9 @@ export default {
   methods: {
     // API Methods
     async startTimer() {
+      console.log('🚀 Starting timer...');
+      console.log('API URL:', `${this.apiBaseUrl}/start`);
+
       try {
         const response = await fetch(`${this.apiBaseUrl}/start`, {
           method: 'POST',
@@ -216,7 +219,9 @@ export default {
           }),
         });
 
+        console.log('Response status:', response.status);
         const data = await response.json();
+        console.log('Response data:', data);
 
         if (!response.ok) {
           throw new Error(data.message || 'Fehler beim Starten des Timers');
@@ -232,11 +237,23 @@ export default {
         this.loadHistory();
 
       } catch (error) {
-        this.showMessage(error.message, 'error');
+        console.error('❌ Error starting timer:', error);
+
+        // Check if it's a CORS error
+        if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+          this.showMessage('CORS-Fehler: Bitte CORS in Xano konfigurieren (siehe Browser-Console für Details)', 'error');
+          console.error('⚠️ CORS-PROBLEM ERKANNT!');
+          console.error('Lösung: Gehe zu Xano Dashboard → API Settings → CORS');
+          console.error('Füge hinzu: https://localhost:8080 oder *');
+        } else {
+          this.showMessage(error.message, 'error');
+        }
       }
     },
 
     async stopTimer() {
+      console.log('🛑 Stopping timer...');
+
       try {
         const response = await fetch(`${this.apiBaseUrl}/stop`, {
           method: 'POST',
@@ -246,6 +263,7 @@ export default {
         });
 
         const data = await response.json();
+        console.log('Stop response:', data);
 
         if (!response.ok) {
           throw new Error(data.message || 'Fehler beim Stoppen des Timers');
@@ -260,7 +278,13 @@ export default {
         this.loadHistory();
 
       } catch (error) {
-        this.showMessage(error.message, 'error');
+        console.error('❌ Error stopping timer:', error);
+
+        if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+          this.showMessage('CORS-Fehler: Bitte CORS in Xano konfigurieren', 'error');
+        } else {
+          this.showMessage(error.message, 'error');
+        }
       }
     },
 
@@ -311,6 +335,7 @@ export default {
 
     async loadHistory() {
       this.isLoadingHistory = true;
+      console.log('📜 Loading history...');
 
       try {
         const params = new URLSearchParams({
@@ -319,8 +344,13 @@ export default {
           status: this.historyStatus,
         });
 
-        const response = await fetch(`${this.apiBaseUrl}/history?${params}`);
+        const url = `${this.apiBaseUrl}/history?${params}`;
+        console.log('History URL:', url);
+
+        const response = await fetch(url);
         const data = await response.json();
+
+        console.log('History loaded:', data.itemsTotal, 'total items');
 
         if (response.ok) {
           this.timerHistory = data.items || [];
@@ -334,8 +364,14 @@ export default {
         }
 
       } catch (error) {
-        console.error('Error loading history:', error);
-        this.showMessage('Fehler beim Laden der Historie', 'error');
+        console.error('❌ Error loading history:', error);
+
+        if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+          this.showMessage('CORS-Fehler beim Laden der Historie', 'error');
+          console.error('⚠️ CORS-Problem: Konfiguriere CORS in Xano');
+        } else {
+          this.showMessage('Fehler beim Laden der Historie', 'error');
+        }
       } finally {
         this.isLoadingHistory = false;
       }
