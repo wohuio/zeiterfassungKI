@@ -477,44 +477,83 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* Orbity Design System */
 .time-tracker {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  max-width: 1200px;
+  /* CSS Variables - Orbity Colors */
+  --primary-green: #A4FF6B;
+  --primary-dark: #0A1612;
+  --accent-green: #00FF85;
+  --bg-dark: #0A1612;
+  --bg-white: #FFFFFF;
+  --bg-light-gray: #F5F5F5;
+  --bg-card: #FFFFFF;
+  --text-primary: #0A1612;
+  --text-secondary: #6B7280;
+  --text-light: #9CA3AF;
+  --text-white: #FFFFFF;
+  --border-light: #E5E7EB;
+  --border-dark: #1F2937;
+
+  /* Spacing */
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-glow: 0 0 40px rgba(164,255,107,0.3);
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 20px;
-  color: #1f2937;
+  padding: var(--spacing-lg);
+  color: var(--text-primary);
 }
 
 /* Messages */
 .message {
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
+  font-weight: 500;
 
   &.success {
-    background-color: #d1fae5;
-    color: #065f46;
-    border: 1px solid #10b981;
+    background-color: rgba(164, 255, 107, 0.15);
+    color: var(--primary-dark);
+    border: 1px solid var(--primary-green);
   }
 
   &.error {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #ef4444;
+    background-color: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #EF4444;
   }
 }
 
 .message-close {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
   opacity: 0.6;
   transition: opacity 0.2s;
+  color: inherit;
 
   &:hover {
     opacity: 1;
@@ -523,29 +562,32 @@ export default {
 
 /* Timer Control */
 .timer-control {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 32px;
-  margin-bottom: 32px;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  border: 1px solid var(--border-light);
 }
 
 .status-badge {
   display: inline-block;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 14px;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: 9999px;
+  font-size: 12px;
   font-weight: 600;
-  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-lg);
 
   &.inactive {
-    background-color: #f3f4f6;
-    color: #6b7280;
+    background-color: var(--bg-light-gray);
+    color: var(--text-secondary);
   }
 
   &.active {
-    background-color: #d1fae5;
-    color: #065f46;
+    background-color: var(--primary-green);
+    color: var(--primary-dark);
   }
 }
 
@@ -556,20 +598,23 @@ export default {
 
 .description-input {
   width: 100%;
-  padding: 16px;
+  padding: var(--spacing-md);
   font-size: 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  transition: border-color 0.2s;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  transition: all 0.2s;
+  background: var(--bg-white);
+  color: var(--text-primary);
 
   &:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(164, 255, 107, 0.1);
   }
 
   &::placeholder {
-    color: #9ca3af;
+    color: var(--text-light);
   }
 }
 
@@ -582,47 +627,52 @@ export default {
   font-size: 72px;
   font-weight: 700;
   font-family: 'Courier New', monospace;
-  color: var(--primary-color);
-  margin: 20px 0;
+  color: var(--primary-dark);
+  margin: var(--spacing-lg) 0;
   letter-spacing: 0.05em;
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--accent-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .timer-details {
-  margin: 24px 0;
+  margin: var(--spacing-lg) 0;
 }
 
 .timer-description {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: #374151;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
 }
 
 .timer-start-time {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
-/* Buttons */
+/* Buttons - Orbity Style */
 .btn {
-  padding: 16px 32px;
-  font-size: 18px;
+  padding: 14px 28px;
+  font-size: 16px;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
+  letter-spacing: 0.01em;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  &:hover:not(:disabled) {
+    transform: scale(1.02);
   }
 
   &:active {
-    transform: translateY(0);
+    transform: scale(0.98);
   }
 
   &:disabled {
@@ -633,85 +683,99 @@ export default {
 }
 
 .btn-start {
-  background-color: var(--success-color);
-  color: white;
+  background-color: var(--primary-green);
+  color: var(--primary-dark);
+  box-shadow: var(--shadow-sm);
 
   &:hover:not(:disabled) {
-    background-color: #059669;
+    background-color: #8FFF4D;
+    box-shadow: var(--shadow-glow);
   }
 }
 
 .btn-stop {
-  background-color: var(--danger-color);
-  color: white;
+  background-color: var(--primary-dark);
+  color: var(--text-white);
+  box-shadow: var(--shadow-sm);
 
   &:hover:not(:disabled) {
-    background-color: #dc2626;
+    background-color: #1a2b26;
+    box-shadow: var(--shadow-md);
   }
 }
 
 .btn-icon {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 /* History Section */
 .history-section {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 32px;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-xl);
+  border: 1px solid var(--border-light);
 }
 
 .history-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-lg);
   flex-wrap: wrap;
-  gap: 16px;
+  gap: var(--spacing-md);
 
   h2 {
     margin: 0;
-    font-size: 24px;
-    color: #111827;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary);
   }
 }
 
 .history-controls {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-sm);
   flex-wrap: wrap;
 }
 
 .filter-select {
-  padding: 8px 12px;
-  border: 2px solid #e5e7eb;
-  border-radius: 6px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  background: var(--bg-white);
+  color: var(--text-primary);
 
   &:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(164, 255, 107, 0.1);
+  }
+
+  &:hover {
+    border-color: var(--primary-green);
   }
 }
 
 /* Loading */
 .loading {
   text-align: center;
-  padding: 40px;
-  color: #6b7280;
+  padding: var(--spacing-2xl);
+  color: var(--text-secondary);
 }
 
 .spinner {
-  border: 4px solid #f3f4f6;
-  border-top: 4px solid var(--primary-color);
+  border: 4px solid var(--bg-light-gray);
+  border-top: 4px solid var(--primary-green);
   border-radius: 50%;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
-  margin: 0 auto 16px;
+  margin: 0 auto var(--spacing-md);
 }
 
 @keyframes spin {
@@ -723,18 +787,20 @@ export default {
 .history-table {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
 .history-item {
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 16px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
   transition: all 0.2s;
+  background: var(--bg-white);
 
   &:hover {
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-green);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
   }
 }
 
@@ -742,66 +808,71 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  gap: 12px;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .history-description {
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
   flex: 1;
 }
 
 .history-status {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
+  padding: 4px var(--spacing-sm);
+  border-radius: 9999px;
+  font-size: 11px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 
   &.running {
-    background-color: #d1fae5;
-    color: #065f46;
+    background-color: var(--primary-green);
+    color: var(--primary-dark);
   }
 
   &.stopped {
-    background-color: #f3f4f6;
-    color: #6b7280;
+    background-color: var(--bg-light-gray);
+    color: var(--text-secondary);
   }
 }
 
 .history-item-details {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
+  gap: var(--spacing-sm);
 }
 
 .history-detail {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
 .detail-label {
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   margin-right: 4px;
 }
 
 /* Empty State */
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
-  color: #6b7280;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  color: var(--text-secondary);
 }
 
 .empty-icon {
   font-size: 64px;
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.5;
 }
 
 .empty-hint {
   font-size: 14px;
-  margin-top: 8px;
+  margin-top: var(--spacing-sm);
+  color: var(--text-light);
 }
 
 /* Pagination */
@@ -809,48 +880,67 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 2px solid #e5e7eb;
-  gap: 16px;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-light);
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
 .btn-pagination {
-  padding: 8px 16px;
+  padding: var(--spacing-sm) var(--spacing-md);
   font-size: 14px;
-  background-color: var(--primary-color);
-  color: white;
+  font-weight: 500;
+  background-color: var(--bg-white);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
 
   &:hover:not(:disabled) {
-    background-color: #2563eb;
+    background-color: var(--primary-green);
+    color: var(--primary-dark);
+    border-color: var(--primary-green);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 }
 
 .pagination-info {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   text-align: center;
+  font-weight: 500;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .time-tracker {
-    padding: 12px;
+    padding: var(--spacing-md);
   }
 
   .timer-control,
   .history-section {
-    padding: 20px;
+    padding: var(--spacing-lg);
   }
 
   .live-timer {
     font-size: 48px;
   }
 
+  .timer-description {
+    font-size: 20px;
+  }
+
   .history-header {
     flex-direction: column;
     align-items: flex-start;
+
+    h2 {
+      font-size: 24px;
+    }
   }
 
   .history-controls {
@@ -868,6 +958,11 @@ export default {
 
   .btn-pagination {
     width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>

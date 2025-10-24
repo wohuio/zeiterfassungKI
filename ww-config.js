@@ -18,11 +18,11 @@ export default {
     },
     primaryColor: {
       label: {
-        en: "Primary Color",
-        de: "Primärfarbe"
+        en: "Primary Green Color",
+        de: "Primäre Grün-Farbe"
       },
       type: "Color",
-      defaultValue: "#3B82F6",
+      defaultValue: "#A4FF6B",
     },
     successColor: {
       label: {
@@ -30,7 +30,7 @@ export default {
         de: "Erfolgsfarbe (Start)"
       },
       type: "Color",
-      defaultValue: "#10B981",
+      defaultValue: "#A4FF6B",
     },
     dangerColor: {
       label: {
@@ -38,7 +38,7 @@ export default {
         de: "Gefahrenfarbe (Stop)"
       },
       type: "Color",
-      defaultValue: "#EF4444",
+      defaultValue: "#0A1612",
     },
     itemsPerPage: {
       label: {
