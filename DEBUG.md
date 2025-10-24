@@ -47,7 +47,7 @@ Das häufigste Problem ist **CORS (Cross-Origin Resource Sharing)**.
 1. **Gehe zu deinem Xano-Dashboard:**
    - Login bei https://xano.io
 
-2. **Wähle deine API aus** (`yiQZgKMy`)
+2. **Wähle deine API aus** (`qM5iOIQs`)
 
 3. **Gehe zu Settings:**
    - Klicke auf "Settings" im linken Menü
@@ -114,12 +114,12 @@ Nach der Lösung:
 
 ```bash
 # Timer starten (sollte funktionieren)
-curl -X POST https://xv05-su7k-rvc8.f2.xano.io/api:yiQZgKMy/start \
+curl -X POST https://xv05-su7k-rvc8.f2.xano.io/api:qM5iOIQs/start \
   -H "Content-Type: application/json" \
   -d '{"description":"Test via curl"}'
 
 # Historie abrufen
-curl -X GET "https://xv05-su7k-rvc8.f2.xano.io/api:yiQZgKMy/history?page=1&per_page=5"
+curl -X GET "https://xv05-su7k-rvc8.f2.xano.io/api:qM5iOIQs/history?page=1&per_page=5"
 ```
 
 ---
@@ -140,7 +140,7 @@ Das ist normal für localhost. Klicke im Browser auf "Fortfahren" oder "Erweiter
 
 Überprüfe die API-URL in `ww-config.js`:
 ```javascript
-defaultValue: "https://xv05-su7k-rvc8.f2.xano.io/api:yiQZgKMy"
+defaultValue: "https://xv05-su7k-rvc8.f2.xano.io/api:qM5iOIQs"
 ```
 
 ---

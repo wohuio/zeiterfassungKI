@@ -13,7 +13,7 @@ export default {
         de: "API Basis-URL"
       },
       type: "Text",
-      defaultValue: "https://xv05-su7k-rvc8.f2.xano.io/api:yiQZgKMy",
+      defaultValue: "https://xv05-su7k-rvc8.f2.xano.io/api:qM5iOIQs",
       bindable: true,
     },
     primaryColor: {

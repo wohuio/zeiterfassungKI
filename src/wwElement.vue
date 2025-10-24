@@ -182,7 +182,7 @@ export default {
 
   computed: {
     apiBaseUrl() {
-      return this.content.apiBaseUrl || 'https://xv05-su7k-rvc8.f2.xano.io/api:yiQZgKMy';
+      return this.content.apiBaseUrl || 'https://xv05-su7k-rvc8.f2.xano.io/api:qM5iOIQs';
     },
 
     autoRefreshInterval() {
