@@ -24,20 +24,10 @@ export default {
                 placeholder: 'User ID'
             }
         },
-        endpoint_start: {
-            label: { en: 'API Endpoint: Clock In', de: 'API Endpoint: Clock In' },
+        endpoint_toggle: {
+            label: { en: 'API Endpoint: Toggle Timer', de: 'API Endpoint: Toggle Timer' },
             type: 'Text',
-            defaultValue: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/clock_in',
-            bindable: true,
-            section: 'settings',
-            options: {
-                placeholder: 'Endpoint URL or ID'
-            }
-        },
-        endpoint_stop: {
-            label: { en: 'API Endpoint: Clock Out', de: 'API Endpoint: Clock Out' },
-            type: 'Text',
-            defaultValue: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/clock_out',
+            defaultValue: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/toggle',
             bindable: true,
             section: 'settings',
             options: {

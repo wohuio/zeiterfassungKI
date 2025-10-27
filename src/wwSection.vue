@@ -29,8 +29,7 @@ export default {
       default: () => ({
         use_api: false,
         user_id: 297,
-        endpoint_start: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/clock_in',
-        endpoint_stop: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/clock_out',
+        endpoint_toggle: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/toggle',
         background_color: '#FFFFFF',
         text_color: '#1F2937',
         timer_color: '#6366f1',
@@ -90,18 +89,17 @@ export default {
       const startTimestamp = new Date().toISOString();
 
       // Call API if enabled
-      if (this.content.use_api && this.content.endpoint_start) {
+      if (this.content.use_api && this.content.endpoint_toggle) {
         try {
-          const response = await this.callAPI(this.content.endpoint_start, {
-            user_id: this.content.user_id,
-            clock_in: startTimestamp
+          const response = await this.callAPI(this.content.endpoint_toggle, {
+            user_id: this.content.user_id
           }, 'POST');
           // Store the ID from response if available
           if (response && response.id) {
             this.timeEntryId = response.id;
           }
         } catch (error) {
-          console.error('Failed to call clock_in API:', error);
+          console.error('Failed to call toggle API (start):', error);
           // Continue with local timer even if API fails
         }
       }
@@ -128,18 +126,13 @@ export default {
       this.isRunning = false;
 
       // Call API if enabled
-      if (this.content.use_api && this.content.endpoint_stop && this.timeEntryId) {
+      if (this.content.use_api && this.content.endpoint_toggle) {
         try {
-          // Append the ID to the endpoint URL
-          const endpointWithId = `${this.content.endpoint_stop}/${this.timeEntryId}`;
-
-          const payload = {
-            clock_out: stopTimestamp
-          };
-
-          await this.callAPI(endpointWithId, payload, 'POST');
+          await this.callAPI(this.content.endpoint_toggle, {
+            user_id: this.content.user_id
+          }, 'POST');
         } catch (error) {
-          console.error('Failed to call clock_out API:', error);
+          console.error('Failed to call toggle API (stop):', error);
         }
       }
 
