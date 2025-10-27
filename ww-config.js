@@ -37,11 +37,11 @@ export default {
         collection_id: {
             label: { en: 'Collection to Refresh', de: 'Collection zum Aktualisieren' },
             type: 'Text',
-            defaultValue: '',
+            defaultValue: 'history',
             bindable: true,
             section: 'settings',
             options: {
-                placeholder: 'Collection UUID (e.g., history)'
+                placeholder: 'Collection name (e.g., history)'
             }
         },
 
