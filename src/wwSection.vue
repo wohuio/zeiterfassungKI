@@ -24,6 +24,7 @@ export default {
   name: 'SimpleTimer',
   emits: ['trigger-event'],
   props: {
+    uid: { type: String, required: true },
     content: {
       type: Object,
       default: () => ({
@@ -40,6 +41,41 @@ export default {
       })
     }
   },
+  setup(props) {
+    // Expose WeWeb variables for formulas
+    const { value: currentTimeVar, setValue: setCurrentTimeVar } =
+      window.wwLib.wwVariable.useComponentVariable({
+        uid: props.uid,
+        name: 'currentTime',
+        type: 'number',
+        defaultValue: 0,
+      });
+
+    const { value: userIdVar, setValue: setUserIdVar } =
+      window.wwLib.wwVariable.useComponentVariable({
+        uid: props.uid,
+        name: 'userId',
+        type: 'number',
+        defaultValue: 297,
+      });
+
+    const { value: isRunningVar, setValue: setIsRunningVar} =
+      window.wwLib.wwVariable.useComponentVariable({
+        uid: props.uid,
+        name: 'isRunning',
+        type: 'boolean',
+        defaultValue: false,
+      });
+
+    return {
+      currentTimeVar,
+      setCurrentTimeVar,
+      userIdVar,
+      setUserIdVar,
+      isRunningVar,
+      setIsRunningVar,
+    };
+  },
   data() {
     return {
       timerInterval: null,
@@ -51,6 +87,24 @@ export default {
   },
   mounted() {
     this.restoreTimerState();
+    // Initialize WeWeb variables
+    this.setUserIdVar(this.content.user_id || 297);
+    this.setCurrentTimeVar(this.currentSeconds);
+    this.setIsRunningVar(this.isRunning);
+  },
+  watch: {
+    'content.user_id': {
+      handler(newVal) {
+        this.setUserIdVar(newVal || 297);
+      },
+      immediate: true,
+    },
+    currentSeconds(newVal) {
+      this.setCurrentTimeVar(newVal);
+    },
+    isRunning(newVal) {
+      this.setIsRunningVar(newVal);
+    },
   },
   computed: {
     containerStyles() {
