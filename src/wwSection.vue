@@ -51,7 +51,8 @@ export default {
       timerInterval: null,
       currentSeconds: 0,
       isRunning: false,
-      startTime: null
+      startTime: null,
+      timeEntryId: null
     };
   },
   computed: {
@@ -80,13 +81,18 @@ export default {
       this.startTime = Date.now();
       this.startInterval();
 
+      const startTimestamp = new Date().toISOString();
+
       // Call API if enabled
       if (this.content.use_api && this.content.endpoint_start) {
         try {
-          await this.callAPI(this.content.endpoint_start, {
-            startTime: this.startTime,
-            timestamp: new Date().toISOString()
+          const response = await this.callAPI(this.content.endpoint_start, {
+            start: startTimestamp
           });
+          // Store the ID from response if available
+          if (response && response.id) {
+            this.timeEntryId = response.id;
+          }
         } catch (error) {
           console.error('Failed to call start API:', error);
           // Continue with local timer even if API fails
@@ -97,7 +103,8 @@ export default {
         name: 'timer_started',
         event: {
           startTime: this.startTime,
-          timestamp: new Date().toISOString()
+          timestamp: startTimestamp,
+          timeEntryId: this.timeEntryId
         }
       });
     },
@@ -105,6 +112,7 @@ export default {
     async stopTimer() {
       const endTime = Date.now();
       const duration = this.currentSeconds;
+      const stopTimestamp = new Date().toISOString();
 
       this.stopInterval();
       this.isRunning = false;
@@ -112,13 +120,16 @@ export default {
       // Call API if enabled
       if (this.content.use_api && this.content.endpoint_stop) {
         try {
-          await this.callAPI(this.content.endpoint_stop, {
-            startTime: this.startTime,
-            endTime: endTime,
-            duration: duration,
-            formattedDuration: this.formattedTime,
-            timestamp: new Date().toISOString()
-          });
+          const payload = {
+            stop: stopTimestamp
+          };
+
+          // Include ID if we have one from the start call
+          if (this.timeEntryId) {
+            payload.id = this.timeEntryId;
+          }
+
+          await this.callAPI(this.content.endpoint_stop, payload);
         } catch (error) {
           console.error('Failed to call stop API:', error);
         }
@@ -131,12 +142,14 @@ export default {
           endTime: endTime,
           duration: duration,
           formattedDuration: this.formattedTime,
-          timestamp: new Date().toISOString()
+          timestamp: stopTimestamp,
+          timeEntryId: this.timeEntryId
         }
       });
 
       this.currentSeconds = 0;
       this.startTime = null;
+      this.timeEntryId = null;
     },
 
     startInterval() {
