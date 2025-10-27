@@ -98,6 +98,15 @@ export default {
           if (response && response.id) {
             this.timeEntryId = response.id;
           }
+
+          // Emit refresh event for WeWeb to reload collections
+          this.$emit('trigger-event', {
+            name: 'refresh_collection',
+            event: {
+              action: 'timer_started',
+              timestamp: startTimestamp
+            }
+          });
         } catch (error) {
           console.error('Failed to call toggle API (start):', error);
           // Continue with local timer even if API fails
@@ -131,6 +140,15 @@ export default {
           await this.callAPI(this.content.endpoint_toggle, {
             user_id: this.content.user_id
           }, 'POST');
+
+          // Emit refresh event for WeWeb to reload collections
+          this.$emit('trigger-event', {
+            name: 'refresh_collection',
+            event: {
+              action: 'timer_stopped',
+              timestamp: stopTimestamp
+            }
+          });
         } catch (error) {
           console.error('Failed to call toggle API (stop):', error);
         }
