@@ -122,18 +122,12 @@ export default {
       // Call API if enabled
       if (this.content.use_api && this.content.endpoint_stop) {
         try {
-          // Build endpoint URL with ID if available
-          let endpoint = this.content.endpoint_stop;
-          if (this.timeEntryId) {
-            // Append ID to URL: /clock_out/123
-            endpoint = `${endpoint}/${this.timeEntryId}`;
-          }
-
           const payload = {
-            clock_out: stopTimestamp
+            clock_out: stopTimestamp,
+            id: this.timeEntryId
           };
 
-          await this.callAPI(endpoint, payload, 'PATCH');
+          await this.callAPI(this.content.endpoint_stop, payload, 'POST');
         } catch (error) {
           console.error('Failed to call clock_out API:', error);
         }
