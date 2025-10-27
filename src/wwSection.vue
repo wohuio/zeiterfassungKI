@@ -128,15 +128,16 @@ export default {
       this.isRunning = false;
 
       // Call API if enabled
-      if (this.content.use_api && this.content.endpoint_stop) {
+      if (this.content.use_api && this.content.endpoint_stop && this.timeEntryId) {
         try {
+          // Append the ID to the endpoint URL
+          const endpointWithId = `${this.content.endpoint_stop}/${this.timeEntryId}`;
+
           const payload = {
-            user_id: this.content.user_id,
-            clock_out: stopTimestamp,
-            id: this.timeEntryId
+            clock_out: stopTimestamp
           };
 
-          await this.callAPI(this.content.endpoint_stop, payload, 'POST');
+          await this.callAPI(endpointWithId, payload, 'POST');
         } catch (error) {
           console.error('Failed to call clock_out API:', error);
         }
