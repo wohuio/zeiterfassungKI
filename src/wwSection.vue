@@ -8,24 +8,18 @@
 
     <div class="controls">
       <button
-        v-if="!isRunning"
-        @click="startTimer"
-        class="btn btn-start"
+        @click="toggleTimer"
+        :class="['btn', isRunning ? 'btn-stop' : 'btn-start']"
       >
-        Start
-      </button>
-      <button
-        v-if="isRunning"
-        @click="stopTimer"
-        class="btn btn-stop"
-      >
-        Stop
+        {{ isRunning ? 'Stop' : 'Start' }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
+const STORAGE_KEY = 'ww_timer_state';
+
 export default {
   name: 'SimpleTimer',
   emits: ['trigger-event'],
@@ -56,6 +50,9 @@ export default {
       timeEntryId: null
     };
   },
+  mounted() {
+    this.restoreTimerState();
+  },
   computed: {
     containerStyles() {
       return {
@@ -76,6 +73,14 @@ export default {
     this.stopInterval();
   },
   methods: {
+    toggleTimer() {
+      if (this.isRunning) {
+        this.stopTimer();
+      } else {
+        this.startTimer();
+      }
+    },
+
     async startTimer() {
       this.currentSeconds = 0;
       this.isRunning = true;
@@ -100,6 +105,9 @@ export default {
           // Continue with local timer even if API fails
         }
       }
+
+      // Save state to localStorage
+      this.saveTimerState();
 
       this.$emit('trigger-event', {
         name: 'timer_started',
@@ -146,9 +154,13 @@ export default {
         }
       });
 
+      // Clear state
       this.currentSeconds = 0;
       this.startTime = null;
       this.timeEntryId = null;
+
+      // Clear localStorage
+      this.clearTimerState();
     },
 
     startInterval() {
@@ -201,6 +213,47 @@ export default {
       }
 
       return await response.json();
+    },
+
+    saveTimerState() {
+      const state = {
+        isRunning: this.isRunning,
+        startTime: this.startTime,
+        timeEntryId: this.timeEntryId
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    },
+
+    clearTimerState() {
+      localStorage.removeItem(STORAGE_KEY);
+    },
+
+    restoreTimerState() {
+      const savedState = localStorage.getItem(STORAGE_KEY);
+      if (!savedState) return;
+
+      try {
+        const state = JSON.parse(savedState);
+
+        if (state.isRunning && state.startTime) {
+          // Restore timer state
+          this.isRunning = state.isRunning;
+          this.startTime = state.startTime;
+          this.timeEntryId = state.timeEntryId;
+
+          // Calculate elapsed time
+          const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+          this.currentSeconds = elapsed;
+
+          // Restart interval
+          this.startInterval();
+
+          console.log('Timer restored:', { elapsed, timeEntryId: this.timeEntryId });
+        }
+      } catch (error) {
+        console.error('Failed to restore timer state:', error);
+        this.clearTimerState();
+      }
     }
   }
 };
