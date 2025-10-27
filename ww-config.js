@@ -14,10 +14,20 @@ export default {
             defaultValue: false,
             section: 'settings'
         },
+        user_id: {
+            label: { en: 'User ID', de: 'User ID' },
+            type: 'Number',
+            defaultValue: 297,
+            bindable: true,
+            section: 'settings',
+            options: {
+                placeholder: 'User ID'
+            }
+        },
         endpoint_start: {
-            label: { en: 'API Endpoint: Start', de: 'API Endpoint: Start' },
+            label: { en: 'API Endpoint: Clock In', de: 'API Endpoint: Clock In' },
             type: 'Text',
-            defaultValue: 'https://xv05-su7k-rvc8.f2.xano.io/api:08j3AE3p/time',
+            defaultValue: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/clock_in',
             bindable: true,
             section: 'settings',
             options: {
@@ -25,9 +35,9 @@ export default {
             }
         },
         endpoint_stop: {
-            label: { en: 'API Endpoint: Stop', de: 'API Endpoint: Stop' },
+            label: { en: 'API Endpoint: Clock Out', de: 'API Endpoint: Clock Out' },
             type: 'Text',
-            defaultValue: 'https://xv05-su7k-rvc8.f2.xano.io/api:08j3AE3p/time',
+            defaultValue: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/clock_out',
             bindable: true,
             section: 'settings',
             options: {

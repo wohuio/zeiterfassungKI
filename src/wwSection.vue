@@ -34,8 +34,9 @@ export default {
       type: Object,
       default: () => ({
         use_api: false,
-        endpoint_start: 'https://xv05-su7k-rvc8.f2.xano.io/api:08j3AE3p/time',
-        endpoint_stop: 'https://xv05-su7k-rvc8.f2.xano.io/api:08j3AE3p/time',
+        user_id: 297,
+        endpoint_start: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/clock_in',
+        endpoint_stop: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/clock_out',
         background_color: '#FFFFFF',
         text_color: '#1F2937',
         timer_color: '#6366f1',
@@ -87,14 +88,15 @@ export default {
       if (this.content.use_api && this.content.endpoint_start) {
         try {
           const response = await this.callAPI(this.content.endpoint_start, {
-            start: startTimestamp
-          });
+            user_id: this.content.user_id,
+            clock_in: startTimestamp
+          }, 'POST');
           // Store the ID from response if available
           if (response && response.id) {
             this.timeEntryId = response.id;
           }
         } catch (error) {
-          console.error('Failed to call start API:', error);
+          console.error('Failed to call clock_in API:', error);
           // Continue with local timer even if API fails
         }
       }
@@ -121,18 +123,18 @@ export default {
       if (this.content.use_api && this.content.endpoint_stop) {
         try {
           const payload = {
-            stop: stopTimestamp
+            user_id: this.content.user_id,
+            clock_out: stopTimestamp
           };
 
-          // If we have an ID, append it to the endpoint URL
-          let endpoint = this.content.endpoint_stop;
+          // If we have an ID from clock_in, include it
           if (this.timeEntryId) {
-            endpoint = `${endpoint}/${this.timeEntryId}`;
+            payload.time_entry_id = this.timeEntryId;
           }
 
-          await this.callAPI(endpoint, payload, 'PATCH');
+          await this.callAPI(this.content.endpoint_stop, payload, 'POST');
         } catch (error) {
-          console.error('Failed to call stop API:', error);
+          console.error('Failed to call clock_out API:', error);
         }
       }
 
