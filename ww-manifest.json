@@ -1,0 +1,11 @@
+{
+  "name": "Simple Timer",
+  "id": "simple-timer-component",
+  "version": "3.0.0",
+  "description": "Einfacher Timer mit Start/Stop Funktionalität",
+  "icon": "clock",
+  "author": "wohu.io",
+  "license": "MIT",
+  "repository": "",
+  "keywords": ["timer", "stopwatch", "simple"]
+}

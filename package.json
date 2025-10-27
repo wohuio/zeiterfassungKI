@@ -1,0 +1,21 @@
+{
+  "name": "zeiterfassung",
+  "version": "2.0.0",
+  "description": "Moderne Zeiterfassung WeWeb Component",
+  "main": "ww-config.js",
+  "scripts": {
+    "build": "weweb build",
+    "serve": "weweb serve"
+  },
+  "keywords": [
+    "zeiterfassung",
+    "time-tracking",
+    "weweb",
+    "component"
+  ],
+  "author": "wohu.io",
+  "license": "MIT",
+  "devDependencies": {
+    "@weweb/cli": "latest"
+  }
+}

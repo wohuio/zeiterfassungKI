@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeiterfassung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 800;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Timer Section */
+        .timer-display {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .timer {
+            font-size: 4em;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            color: #1f2937;
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+        }
+
+        .timer.running {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .btn-stop:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* History Section */
+        .history-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .history-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            border: 2px solid #f3f4f6;
+        }
+
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            border-color: #e5e7eb;
+        }
+
+        .history-item.running {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-left: 4px solid #8b5cf6;
+            border-color: #8b5cf6;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-name {
+            font-weight: 600;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .duration {
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-info {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .delete-btn, .edit-btn, .save-btn, .cancel-btn {
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+
+        .edit-btn:hover {
+            background: linear-gradient(135deg, #5558e3 0%, #7c3aed 100%);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .save-btn {
+            background: #28a745;
+        }
+
+        .save-btn:hover {
+            background: #218838;
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+        }
+
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            border-color: #5568d3;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .history-list {
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .timer {
+                font-size: 3em;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏱️ Zeiterfassung</h1>
+
+        <div class="main-content">
+            <!-- Timer Section -->
+            <div class="timer-section">
+                <h2 class="section-title">Timer</h2>
+                <div class="timer-display">
+                    <div id="timer" class="timer">00:00:00</div>
+                </div>
+
+                <div class="controls">
+                    <button id="startBtn" class="btn btn-start" onclick="startTimer()">
+                        Start
+                    </button>
+                    <button id="stopBtn" class="btn btn-stop" onclick="stopTimer()" style="display: none;">
+                        Stop
+                    </button>
+                </div>
+            </div>
+
+            <!-- History Section -->
+            <div class="history-section">
+                <h2 class="section-title">Historie</h2>
+
+                <div class="filter-section">
+                    <button class="filter-btn active" onclick="filterHistory('all')">Alle</button>
+                    <button class="filter-btn" onclick="filterHistory('today')">Heute</button>
+                    <button class="filter-btn" onclick="filterHistory('week')">Diese Woche</button>
+                    <button class="filter-btn" onclick="filterHistory('month')">Dieser Monat</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTime">0h 0m</div>
+                        <div class="stat-label">Gesamtzeit</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSessions">0</div>
+                        <div class="stat-label">Sitzungen</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="todayTime">0h 0m</div>
+                        <div class="stat-label">Heute</div>
+                    </div>
+                </div>
+
+                <div id="historyList" class="history-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>Noch keine Einträge vorhanden</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timerInterval = null;
+        let currentSeconds = 0;
+        let currentEntry = null;
+        let timeEntries = [];
+        let editingEntryId = null;
+        let currentFilter = 'all';
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('timeEntries');
+            if (saved) {
+                timeEntries = JSON.parse(saved);
+                updateHistory();
+                updateStats();
+            }
+
+            // Check for running timer
+            const running = timeEntries.find(e => !e.endTime);
+            if (running) {
+                currentEntry = running;
+                const elapsed = Math.floor((Date.now() - running.startTime) / 1000);
+                currentSeconds = elapsed;
+                startInterval();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('timeEntries', JSON.stringify(timeEntries));
+            updateHistory();
+            updateStats();
+        }
+
+        // Format time
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function formatDuration(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+
+            if (h > 0) {
+                return `${h}h ${m}m`;
+            }
+            return `${m}m`;
+        }
+
+        // Update timer display
+        function updateDisplay() {
+            document.getElementById('timer').textContent = formatTime(currentSeconds);
+        }
+
+        // Start interval
+        function startInterval() {
+            document.getElementById('timer').classList.add('running');
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'block';
+
+            timerInterval = setInterval(() => {
+                currentSeconds++;
+                updateDisplay();
+            }, 1000);
+        }
+
+        // Start timer
+        function startTimer() {
+            currentEntry = {
+                id: Date.now(),
+                task: 'Arbeitszeit',
+                startTime: Date.now(),
+                endTime: null
+            };
+
+            timeEntries.push(currentEntry);
+            currentSeconds = 0;
+
+            startInterval();
+            saveData();
+        }
+
+        // Stop timer
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            document.getElementById('timer').classList.remove('running');
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('stopBtn').style.display = 'none';
+
+            if (currentEntry) {
+                currentEntry.endTime = Date.now();
+                currentEntry.duration = currentSeconds;
+                currentEntry = null;
+            }
+
+            currentSeconds = 0;
+            updateDisplay();
+
+            saveData();
+        }
+
+        // Delete entry
+        function deleteEntry(id) {
+            if (confirm('Möchtest du diesen Eintrag wirklich löschen?')) {
+                timeEntries = timeEntries.filter(e => e.id !== id);
+                saveData();
+            }
+        }
+
+        // Start editing entry
+        function editEntry(id) {
+            editingEntryId = id;
+            updateHistory();
+        }
+
+        // Cancel editing
+        function cancelEdit() {
+            editingEntryId = null;
+            updateHistory();
+        }
+
+        // Save edited entry
+        function saveEdit(id) {
+            const entry = timeEntries.find(e => e.id === id);
+            if (!entry) return;
+
+            const task = document.getElementById(`edit-task-${id}`).value;
+            const startInput = document.getElementById(`edit-start-${id}`).value;
+            const endInput = document.getElementById(`edit-end-${id}`).value;
+
+            // Parse datetime-local inputs
+            if (startInput) {
+                entry.startTime = new Date(startInput).getTime();
+            }
+            if (endInput && entry.endTime) {
+                entry.endTime = new Date(endInput).getTime();
+                // Recalculate duration
+                entry.duration = Math.floor((entry.endTime - entry.startTime) / 1000);
+            }
+            entry.task = task;
+
+            editingEntryId = null;
+            saveData();
+        }
+
+        // Format date for datetime-local input
+        function formatDateTimeLocal(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        // Filter history
+        function filterHistory(filter) {
+            currentFilter = filter;
+
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            updateHistory();
+            updateStats();
+        }
+
+        // Get filtered entries
+        function getFilteredEntries() {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const weekStart = new Date(today);
+            weekStart.setDate(today.getDate() - today.getDay() + 1); // Monday
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+            return timeEntries.filter(entry => {
+                if (currentFilter === 'all') return true;
+
+                const entryDate = new Date(entry.startTime);
+
+                if (currentFilter === 'today') {
+                    return entryDate >= today;
+                } else if (currentFilter === 'week') {
+                    return entryDate >= weekStart;
+                } else if (currentFilter === 'month') {
+                    return entryDate >= monthStart;
+                }
+                return true;
+            });
+        }
+
+        // Update history list
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            const filteredEntries = getFilteredEntries();
+
+            if (filteredEntries.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>Keine Einträge für diesen Filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const sorted = [...filteredEntries].reverse();
+
+            historyList.innerHTML = sorted.map(entry => {
+                const isRunning = !entry.endTime;
+                const isEditing = editingEntryId === entry.id;
+                const duration = isRunning
+                    ? Math.floor((Date.now() - entry.startTime) / 1000)
+                    : entry.duration;
+
+                const startDate = new Date(entry.startTime);
+                const endDate = entry.endTime ? new Date(entry.endTime) : null;
+
+                if (isEditing) {
+                    return `
+                        <div class="history-item">
+                            <div class="history-header">
+                                <input
+                                    type="text"
+                                    id="edit-task-${entry.id}"
+                                    class="edit-input"
+                                    value="${entry.task}"
+                                >
+                            </div>
+                            <div class="time-info">
+                                <label>Start:</label>
+                                <input
+                                    type="datetime-local"
+                                    id="edit-start-${entry.id}"
+                                    class="edit-input"
+                                    value="${formatDateTimeLocal(entry.startTime)}"
+                                >
+                                ${entry.endTime ? `
+                                    <label>Ende:</label>
+                                    <input
+                                        type="datetime-local"
+                                        id="edit-end-${entry.id}"
+                                        class="edit-input"
+                                        value="${formatDateTimeLocal(entry.endTime)}"
+                                    >
+                                ` : ''}
+                            </div>
+                            <div class="action-buttons">
+                                <button class="save-btn" onclick="saveEdit(${entry.id})">Speichern</button>
+                                <button class="cancel-btn" onclick="cancelEdit()">Abbrechen</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="history-item ${isRunning ? 'running' : ''}">
+                        <div class="history-header">
+                            <div class="task-name">${entry.task}</div>
+                            <div class="duration">${formatTime(duration)}</div>
+                        </div>
+                        <div class="time-info">
+                            Start: ${startDate.toLocaleString('de-DE')}
+                            ${endDate ? `<br>Ende: ${endDate.toLocaleString('de-DE')}` : '<br><strong>⏱️ Läuft noch...</strong>'}
+                        </div>
+                        ${!isRunning ? `
+                            <div class="action-buttons">
+                                <button class="edit-btn" onclick="editEntry(${entry.id})">Bearbeiten</button>
+                                <button class="delete-btn" onclick="deleteEntry(${entry.id})">Löschen</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const filteredEntries = getFilteredEntries();
+            const completed = filteredEntries.filter(e => e.endTime);
+            const totalSeconds = completed.reduce((sum, e) => sum + e.duration, 0);
+
+            // Calculate today's time from all entries (not filtered)
+            const today = new Date().toDateString();
+            const todayEntries = timeEntries.filter(e => e.endTime && new Date(e.startTime).toDateString() === today);
+            const todaySeconds = todayEntries.reduce((sum, e) => sum + e.duration, 0);
+
+            // Update labels based on filter
+            let timeLabel = 'Gesamtzeit';
+            if (currentFilter === 'today') timeLabel = 'Heute';
+            else if (currentFilter === 'week') timeLabel = 'Diese Woche';
+            else if (currentFilter === 'month') timeLabel = 'Dieser Monat';
+
+            document.getElementById('totalTime').textContent = formatDuration(totalSeconds);
+            document.getElementById('totalTime').previousElementSibling.textContent = timeLabel;
+
+            document.getElementById('totalSessions').textContent = completed.length;
+            document.getElementById('todayTime').textContent = formatDuration(todaySeconds);
+        }
+
+        // Initialize
+        loadData();
+        updateDisplay();
+    </script>
+</body>
+</html>
