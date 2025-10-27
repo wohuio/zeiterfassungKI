@@ -30,7 +30,6 @@ export default {
         use_api: false,
         user_id: 297,
         endpoint_toggle: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/toggle',
-        collection_id: 'history',
         background_color: '#FFFFFF',
         text_color: '#1F2937',
         timer_color: '#6366f1',
@@ -100,9 +99,6 @@ export default {
             this.timeEntryId = response.id;
           }
 
-          // Refresh WeWeb collection if configured
-          this.refreshCollection();
-
           // Emit refresh event for WeWeb to reload collections
           this.$emit('trigger-event', {
             name: 'refresh_collection',
@@ -144,9 +140,6 @@ export default {
           await this.callAPI(this.content.endpoint_toggle, {
             user_id: this.content.user_id
           }, 'POST');
-
-          // Refresh WeWeb collection if configured
-          this.refreshCollection();
 
           // Emit refresh event for WeWeb to reload collections
           this.$emit('trigger-event', {
@@ -272,49 +265,6 @@ export default {
       } catch (error) {
         console.error('Failed to restore timer state:', error);
         this.clearTimerState();
-      }
-    },
-
-    refreshCollection() {
-      if (!this.content.collection_id) return;
-
-      try {
-        // WeWeb collection refresh - try multiple methods
-        if (typeof wwLib !== 'undefined') {
-          const collectionId = this.content.collection_id;
-
-          // Method 1: Try fetching by name
-          if (wwLib.wwCollection && wwLib.wwCollection.fetchByName) {
-            wwLib.wwCollection.fetchByName(collectionId);
-            console.log('Collection refreshed by name:', collectionId);
-            return;
-          }
-
-          // Method 2: Try direct fetch (works with UUID)
-          if (wwLib.wwCollection && wwLib.wwCollection.fetch) {
-            wwLib.wwCollection.fetch(collectionId);
-            console.log('Collection refreshed by ID:', collectionId);
-            return;
-          }
-
-          // Method 3: Try finding collection in store and fetching
-          if (wwLib.$store) {
-            const collections = wwLib.$store.state.data?.collections || {};
-            const collection = Object.values(collections).find(
-              col => col.name === collectionId || col.id === collectionId
-            );
-
-            if (collection && collection.id) {
-              wwLib.wwCollection.fetch(collection.id);
-              console.log('Collection refreshed via store:', collectionId);
-              return;
-            }
-          }
-
-          console.warn('Could not find collection to refresh:', collectionId);
-        }
-      } catch (error) {
-        console.error('Failed to refresh collection:', error);
       }
     }
   }

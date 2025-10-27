@@ -34,16 +34,6 @@ export default {
                 placeholder: 'Endpoint URL or ID'
             }
         },
-        collection_id: {
-            label: { en: 'Collection to Refresh', de: 'Collection zum Aktualisieren' },
-            type: 'Text',
-            defaultValue: 'history',
-            bindable: true,
-            section: 'settings',
-            options: {
-                placeholder: 'Collection name (e.g., history)'
-            }
-        },
 
         // Design Settings
         background_color: {
