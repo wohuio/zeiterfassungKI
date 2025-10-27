@@ -18,8 +18,6 @@
 </template>
 
 <script>
-const STORAGE_KEY = 'ww_timer_state';
-
 export default {
   name: 'SimpleTimer',
   emits: ['trigger-event'],
@@ -94,8 +92,23 @@ export default {
   },
   watch: {
     'content.user_id': {
-      handler(newVal) {
+      handler(newVal, oldVal) {
         this.setUserIdVar(newVal || 297);
+
+        // When user changes, stop current timer and load new user's state
+        if (oldVal !== undefined && newVal !== oldVal) {
+          console.log(`User changed from ${oldVal} to ${newVal}, reloading timer state...`);
+
+          // Stop current timer without API call
+          this.stopInterval();
+          this.isRunning = false;
+          this.currentSeconds = 0;
+          this.startTime = null;
+          this.timeEntryId = null;
+
+          // Load new user's timer state
+          this.restoreTimerState();
+        }
       },
       immediate: true,
     },
@@ -107,6 +120,11 @@ export default {
     },
   },
   computed: {
+    // User-specific storage key
+    storageKey() {
+      const userId = this.content.user_id || 297;
+      return `ww_timer_state_user_${userId}`;
+    },
     containerStyles() {
       return {
         '--background-color': this.content.background_color || '#FFFFFF',
@@ -287,15 +305,15 @@ export default {
         startTime: this.startTime,
         timeEntryId: this.timeEntryId
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(this.storageKey, JSON.stringify(state));
     },
 
     clearTimerState() {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(this.storageKey);
     },
 
     restoreTimerState() {
-      const savedState = localStorage.getItem(STORAGE_KEY);
+      const savedState = localStorage.getItem(this.storageKey);
       if (!savedState) return;
 
       try {
