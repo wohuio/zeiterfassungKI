@@ -123,6 +123,7 @@ export default {
       if (this.content.use_api && this.content.endpoint_stop) {
         try {
           const payload = {
+            user_id: this.content.user_id,
             clock_out: stopTimestamp,
             id: this.timeEntryId
           };
