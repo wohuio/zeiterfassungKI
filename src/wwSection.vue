@@ -30,6 +30,7 @@ export default {
         use_api: false,
         user_id: 297,
         endpoint_toggle: 'https://xv05-su7k-rvc8.f2.xano.io/api:6iYtDb6K/toggle',
+        collection_id: '',
         background_color: '#FFFFFF',
         text_color: '#1F2937',
         timer_color: '#6366f1',
@@ -99,6 +100,9 @@ export default {
             this.timeEntryId = response.id;
           }
 
+          // Refresh WeWeb collection if configured
+          this.refreshCollection();
+
           // Emit refresh event for WeWeb to reload collections
           this.$emit('trigger-event', {
             name: 'refresh_collection',
@@ -140,6 +144,9 @@ export default {
           await this.callAPI(this.content.endpoint_toggle, {
             user_id: this.content.user_id
           }, 'POST');
+
+          // Refresh WeWeb collection if configured
+          this.refreshCollection();
 
           // Emit refresh event for WeWeb to reload collections
           this.$emit('trigger-event', {
@@ -265,6 +272,20 @@ export default {
       } catch (error) {
         console.error('Failed to restore timer state:', error);
         this.clearTimerState();
+      }
+    },
+
+    refreshCollection() {
+      if (!this.content.collection_id) return;
+
+      try {
+        // Try to fetch WeWeb collection using wwLib
+        if (typeof wwLib !== 'undefined' && wwLib.wwCollection) {
+          wwLib.wwCollection.fetch(this.content.collection_id);
+          console.log('Collection refreshed:', this.content.collection_id);
+        }
+      } catch (error) {
+        console.error('Failed to refresh collection:', error);
       }
     }
   }

@@ -34,6 +34,16 @@ export default {
                 placeholder: 'Endpoint URL or ID'
             }
         },
+        collection_id: {
+            label: { en: 'Collection to Refresh', de: 'Collection zum Aktualisieren' },
+            type: 'Text',
+            defaultValue: '',
+            bindable: true,
+            section: 'settings',
+            options: {
+                placeholder: 'Collection UUID (e.g., history)'
+            }
+        },
 
         // Design Settings
         background_color: {
