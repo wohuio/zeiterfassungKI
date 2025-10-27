@@ -34,8 +34,8 @@ export default {
       type: Object,
       default: () => ({
         use_api: false,
-        endpoint_start: '',
-        endpoint_stop: '',
+        endpoint_start: 'https://xv05-su7k-rvc8.f2.xano.io/api:08j3AE3p/time',
+        endpoint_stop: 'https://xv05-su7k-rvc8.f2.xano.io/api:08j3AE3p/time',
         background_color: '#FFFFFF',
         text_color: '#1F2937',
         timer_color: '#6366f1',

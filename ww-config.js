@@ -17,7 +17,7 @@ export default {
         endpoint_start: {
             label: { en: 'API Endpoint: Start', de: 'API Endpoint: Start' },
             type: 'Text',
-            defaultValue: '',
+            defaultValue: 'https://xv05-su7k-rvc8.f2.xano.io/api:08j3AE3p/time',
             bindable: true,
             section: 'settings',
             options: {
@@ -27,7 +27,7 @@ export default {
         endpoint_stop: {
             label: { en: 'API Endpoint: Stop', de: 'API Endpoint: Stop' },
             type: 'Text',
-            defaultValue: '',
+            defaultValue: 'https://xv05-su7k-rvc8.f2.xano.io/api:08j3AE3p/time',
             bindable: true,
             section: 'settings',
             options: {
