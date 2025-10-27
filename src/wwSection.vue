@@ -124,12 +124,13 @@ export default {
             stop: stopTimestamp
           };
 
-          // Include ID if we have one from the start call
+          // If we have an ID, append it to the endpoint URL
+          let endpoint = this.content.endpoint_stop;
           if (this.timeEntryId) {
-            payload.id = this.timeEntryId;
+            endpoint = `${endpoint}/${this.timeEntryId}`;
           }
 
-          await this.callAPI(this.content.endpoint_stop, payload);
+          await this.callAPI(endpoint, payload, 'PATCH');
         } catch (error) {
           console.error('Failed to call stop API:', error);
         }
@@ -181,7 +182,7 @@ export default {
       return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     },
 
-    async callAPI(endpoint, data) {
+    async callAPI(endpoint, data, method = 'POST') {
       if (!endpoint) return;
 
       // Determine if endpoint is a full URL or WeWeb endpoint ID
@@ -190,7 +191,7 @@ export default {
         : `/_ww/endpoints/${endpoint}`;
 
       const response = await fetch(url, {
-        method: 'POST',
+        method: method,
         headers: {
           'Content-Type': 'application/json'
         },
